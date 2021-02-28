@@ -28,3 +28,5 @@ jobs:
         - docker push $DOCKER_USERNAME/web:latest
 
 
+script:
+  - echo: "SCRIPT"

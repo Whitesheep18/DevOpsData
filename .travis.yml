@@ -1,1 +1,30 @@
 language: python 
+python:
+  - 3.8
+
+services:
+  - docker
+
+install:
+  - docker --version
+
+stages:
+  - build_images
+
+jobs:
+  include:
+    - stage: build_images
+      name: "build and push images"
+      script:
+        - echo "LOGIN"
+        - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        - echo "BUILD"
+        - docker build -t $DOCKER_USERNAME/database:latest . -f Database/Dockerfile
+        - docker build -t $DOCKER_USERNAME/api:latest . -f Api/Dockerfile
+        - docker build -t $DOCKER_USERNAME/web:latest . -f Web/Dockerfile
+        - echo "PUSH"
+        - docker push $DOCKER_USERNAME/database:latest
+        - docker push $DOCKER_USERNAME/api:latest
+        - docker push $DOCKER_USERNAME/web:latest
+
+
